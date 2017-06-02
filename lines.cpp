@@ -1,7 +1,7 @@
 #include<cmath>
 #include<iostream>
 using namespace std;
-#include"CoordinateSystem"
+#include"CoordinateSystem.cpp"
 
 class line{
 	private:
@@ -12,8 +12,8 @@ class line{
 	line(point begin);
 	line(float angle);
 	line(point begin, float angle);	// constructors
-	polar_point mirrorpoint(polar_point p);	
-	point mirrorpoint(point p);		// to find the mirror image of a point on a line
+	polar_point MirrorPoint(polar_point p);	
+	point MirrorPoint(point p);		// to find the mirror image of a point on a line
 }
 
 line::line(){
@@ -24,6 +24,28 @@ line::line(){
 	cout<<"enter the angle at which the line is inclined"<<endl;
 	cin>>direction;
 }
+
 line::line(point begin){
-	
+	start = begin;
+	cout<<"enter the angle at which the line is inclined"<<endl;
+	cin>>direction;
+}
+
+line::line(point begin, float angle){
+	start = begin;
+	direction = angle;
+}
+
+polar_point line::MirrorPoint(polar_point p){
+	float angle_diff = p.theta - direction;
+	polar_point q;
+	q.theta = direction - anfle_diff;
+	q.r = p.r;
+	return q;
+}
+
+point line::line(point p){
+	polar_point q = ConvertToPolar(p);
+	q = MirrorPoint(q);
+	return ConvertToCoordinate(q);
 }

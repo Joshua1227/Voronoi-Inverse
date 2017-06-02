@@ -3,22 +3,6 @@ using namespace std;
 #include<cmath>
 #include"CoordinateSystem.cpp"
 
-class circle{
-	private:
-	float radius; 						//  radius of the circle
-	point center; 						//  center of the circle 
-	public:
-	circle();
-	circle(point p);
-	circle(float rad);					//constructors	
-	point ClosestPoint(point p);
-	polar_point ClosestPoint(polar_point p);	// to replace a point outside a circle to the closest point on the circle
-	bool IsPointOnCircle(point &p);
-	bool IsPointOnCircle(polar_point &p);		// Both are functions to check whether a given point lies on the circle 
-	point MidPointOnCircle(point p, point q);
-	point MidPointOnCircle(polar_point p, polar_point q);	// find the midpoint on the circle of two points lying on the same circle
-};
-//Note: Add function to find closest point to a point on the circle if the point is not on the circle. 
 circle::circle(){
 	cout<<"enter the x coordinate of the center of the circle"<<endl;
 	cin>>center.x;
@@ -50,12 +34,11 @@ circle::circle(float rad){
 	cout<<"radius of the circle is "<<radius<<endl;					//for testing
 }
 bool circle::IsPointOnCircle(point &p){				// Check whether point is on the circle
-	bool found = false;					// the x coordinate lies on the circle
-	//bool foundy = false;
+	bool found = false;					
 	float temp;
-	if (sqrt(pow((center.x-p.x),2) + pow((center.y-p.y),2)) == radius)
+	if (sqrt(pow((center.x-p.x),2) + pow((center.y-p.y),2)) == radius)	//the radius of the circle is thae same as the distance between the center and the point
 		found = true;
-	else if(sqrt(pow((center.x-p.x),2) + pow((center.y-p.y),2)) < radius +1 && sqrt(pow((center.x-p.x),2) + pow((center.y-p.y),2)) > radius - 1)
+	else if(sqrt(pow((center.x-p.x),2) + pow((center.y-p.y),2)) < radius +1 && sqrt(pow((center.x-p.x),2) + pow((center.y-p.y),2)) > radius - 1)	//  if there is very little distance between the the distance and radius replace the point with the closest point on the circle
 		{
 			p = ClosestPoint(p);
 			found = true;
