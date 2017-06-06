@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 #include<cmath>
-#include"CoordinateSystem.cpp"
+#include"CoordinateSystem.h"
 
 class circle{
 	private:

@@ -1,7 +1,7 @@
 #include<cmath>
 #include<iostream>
 using namespace std;
-#include"CoordinateSystem.cpp"
+#include"CoordinateSystem.h"
 
 class line{
 	private:
@@ -14,4 +14,4 @@ class line{
 	line(point begin, float angle);	// constructors
 	polar_point MirrorPoint(polar_point p);	
 	point MirrorPoint(point p);		// to find the mirror image of a point on a line
-}
+};

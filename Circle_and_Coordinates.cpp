@@ -1,7 +1,8 @@
+#include"Circle_and_Coordinates.h"
 #include<iostream>
 using namespace std;
 #include<cmath>
-#include"CoordinateSystem.cpp"
+#include"CoordinateSystem.h"
 
 circle::circle(){
 	cout<<"enter the x coordinate of the center of the circle"<<endl;
@@ -15,20 +16,16 @@ circle::circle(){
 }
 
 circle::circle(point p){
-	cout<<"enter the x coordinate of the center of the circle"<<endl;
-	cin>>center.x;
-	cout<<"enter the y coordinate of the center of the circle"<<endl;
-	cin>>center.y;
+	center.x = 0;
+	center.y = 0;
 	radius = sqrt(pow((center.x - p.x),2) + pow((center.y - p.y),2));
 	cout<<"center of the circle is ("<<center.x<<", "<<center.y<<")"<<endl;		//for testing
 	cout<<"radius of the circle is "<<radius<<endl;					//for testing
 }
 
 circle::circle(float rad){
-	cout<<"enter the x coordinate of the center of the circle"<<endl;
-	cin>>center.x;
-	cout<<"enter the y coordinate of the center of the circle"<<endl;
-	cin>>center.y;
+	center.x = 0;
+	center.y = 0;
 	radius = rad;
 	cout<<"center of the circle is ("<<center.x<<", "<<center.y<<")"<<endl;		//for testing
 	cout<<"radius of the circle is "<<radius<<endl;					//for testing
@@ -84,20 +81,20 @@ point circle::MidPointOnCircle(polar_point p, polar_point q){
 	{
 		center.x -= tempx;			// transform center of the circle to the origin				
 		center.y -= tempy;
-		point p1 = ConvertToCoordinate(p);	// convert polar point to coordinate for tranforming
-		point q1 = ConvertToCoordinate(q);
+		point p1 = p.ConvertToCoordinate();	// convert polar point to coordinate for tranforming
+		point q1 = q.ConvertToCoordinate();
 		p1.x -= tempx;				// transform the points
 		p1.y -= tempy;
 		q1.x -= tempx;
 		q1.y -= tempy;
-		polar_point p2 = ConvertToPolar(p1);	// convert coordinate points to polar for finding mid point.
-		polar_point q2 = ConvertToPolar(q1);
+		polar_point p2 = p1.ConvertToPolar();	// convert coordinate points to polar for finding mid point.
+		polar_point q2 = q1.ConvertToPolar();
 		f.theta = (p2.theta + q2.theta)/2;
 		f.r = p2.r;
 		center.x += tempx;			// transform center of the circle from the origin to its original location				
 		center.y += tempy;
 	}
-	f1 = ConvertToCoordinate(f);
+	f1 = f.ConvertToCoordinate();
 	f1.x += tempx;
 	f1.y += tempy; 
 	return f1;
@@ -114,8 +111,8 @@ point circle::MidPointOnCircle(point p, point q){
 	float tempy = center.y;
 	if(center.x == 0, center.y == 0)
 	{
-		polar_point p1 = ConvertToPolar(p);
-		polar_point q1 = ConvertToPolar(q);
+		polar_point p1 = p.ConvertToPolar();
+		polar_point q1 = q.ConvertToPolar();
 		f.theta = (p1.theta + q1.theta)/2;
 		f.r = p1.r;
 	}
@@ -127,8 +124,8 @@ point circle::MidPointOnCircle(point p, point q){
 		p.y -= tempy;
 		q.x -= tempx;
 		q.y -= tempy;
-		polar_point p1 = ConvertToPolar(p); 		// convert tranformed points to polar coordinates
-		polar_point q1 = ConvertToPolar(q);
+		polar_point p1 = p.ConvertToPolar(); 		// convert tranformed points to polar coordinates
+		polar_point q1 = q.ConvertToPolar();
 		f.theta = (p1.theta + q1.theta)/2;		// calculate midpoint in transformed coordinate system
 		f.r = p1.r;
 		p.x += tempx; 					// transform points and center back to their original position
@@ -138,16 +135,16 @@ point circle::MidPointOnCircle(point p, point q){
 		center.x += tempx;				
 		center.y += tempy;
 	}
-	f1 = ConvertToCoordinate(f);				// convert midpoint to cartesian coordinate 
+	f1 = f.ConvertToCoordinate();				// convert midpoint to cartesian coordinate 
 	f1.x += tempx;						// transform the midpoint to original coordinate system
 	f1.y += tempy;
 	return f1;
 }
 
 point circle::ClosestPoint(point p){				// this function assumes center of the circle is at the origin
-	polar_point p1 = ConvertToPolar(p);
+	polar_point p1 = p.ConvertToPolar();
 	p1.r = radius;
-	p = ConvertToCoordinate(p1);
+	p = p1.ConvertToCoordinate();
 	return p;
 }
 
