@@ -76,6 +76,7 @@ point circle::MidPointOnCircle(polar_point p, polar_point q){
 	{
 		f.theta = (p.theta + q.theta)/2;
 		f.r = p.r;
+		f.angle_correction();
 	}
 	else
 	{
@@ -89,8 +90,11 @@ point circle::MidPointOnCircle(polar_point p, polar_point q){
 		q1.y -= tempy;
 		polar_point p2 = p1.ConvertToPolar();	// convert coordinate points to polar for finding mid point.
 		polar_point q2 = q1.ConvertToPolar();
+		p2.angle_correction();
+		q2.angle_correction();
 		f.theta = (p2.theta + q2.theta)/2;
 		f.r = p2.r;
+		f.angle_correction();
 		center.x += tempx;			// transform center of the circle from the origin to its original location				
 		center.y += tempy;
 	}
@@ -113,8 +117,11 @@ point circle::MidPointOnCircle(point p, point q){
 	{
 		polar_point p1 = p.ConvertToPolar();
 		polar_point q1 = q.ConvertToPolar();
+		p1.angle_correction();
+		q1.angle_correction();
 		f.theta = (p1.theta + q1.theta)/2;
 		f.r = p1.r;
+		f.angle_correction();
 	}
 	else
 	{
@@ -126,6 +133,8 @@ point circle::MidPointOnCircle(point p, point q){
 		q.y -= tempy;
 		polar_point p1 = p.ConvertToPolar(); 		// convert tranformed points to polar coordinates
 		polar_point q1 = q.ConvertToPolar();
+		p1.angle_correction();
+		q1.angle_correction();
 		f.theta = (p1.theta + q1.theta)/2;		// calculate midpoint in transformed coordinate system
 		f.r = p1.r;
 		p.x += tempx; 					// transform points and center back to their original position
@@ -144,6 +153,7 @@ point circle::MidPointOnCircle(point p, point q){
 point circle::ClosestPoint(point p){				// this function assumes center of the circle is at the origin
 	polar_point p1 = p.ConvertToPolar();
 	p1.r = radius;
+	p1.angle_correction();
 	p = p1.ConvertToCoordinate();
 	return p;
 }
@@ -152,22 +162,3 @@ polar_point circle::ClosestPoint(polar_point p){		// this function assumes cente
 	p.r = radius;
 	return p;
 }
-
-/*int main() // for testing
-{
-	point P1;
-	P1.x = 1;
-	P1.y = 0;
-	polar_point P2;
-	point P3,P4;
-	P3.x=0;
-	P3.y=1;
-	P2 = ConvertToPolar(P1);
-	cout<<"("<<P2.r<<", "<<P2.theta<<")"<<endl;
-	P1 = ConvertToCoordinate(P2);
-	cout<<"("<<P1.x<<", "<<P1.y<<")"<<endl;
-	circle C(P1);
-	cout<<C.IsPointOnCircle(P1);
-	P4 = C.MidPointOnCircle(P1, P3);
-	cout<<"Mid Point = ("<<P4.x<<", "<<P4.y<<")"<<endl;
-}*/

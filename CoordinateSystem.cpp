@@ -15,3 +15,10 @@ polar_point point::ConvertToPolar(){	// A function to convert cartesian cooredin
 	q.theta = atan2(y, x) * 180/M_PI;
 	return q;
 }
+
+polar_point polar_point::angle_correction(){
+	while(theta > 360)
+		theta -= 360;
+	while (theta < 0)
+		theta += 360;
+}
