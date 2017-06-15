@@ -8,6 +8,7 @@ class line{
 	point start;			//the starting point of the line
 	float direction;		//angle of the slope of the line
 	public:
+	float angle();
 	line();
 	line(point begin);
 	line(float angle);

@@ -40,3 +40,6 @@ point line::MirrorPoint(point p){
 	q = MirrorPoint(q);
 	return q.ConvertToCoordinate();
 }
+float line::angle(){
+	return direction;
+}
