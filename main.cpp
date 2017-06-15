@@ -6,7 +6,92 @@
 #include<algorithm>
 #include<iostream>
 #include<time.h>
+#include <cstdlib>
+#include <GL/glut.h>
 using namespace std;
+
+point last, last1, last2, lineA, lineB, lineC;
+
+void mydisplay()
+{
+	const float PI=3.14159;
+
+	//fill the frame buffer with the background color
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	//fill a circle using a different color for each point
+	//You get totally different drawings using the drawing
+	//modes GL_POLYGON and GL_TRIANGLE_FAN
+	//glBegin(GL_POLYGON);
+	glBegin(GL_LINE_LOOP);
+	//fill a circle using a triangle fan
+	//glBegin(GL_TRIANGLE_FAN);
+		//All triangles fan out starting with this point
+		glVertex2f (0.0,0.0);
+		for (float i = 0; i <=360; i+= 0.0001)
+		{				
+			glColor3f(255, 255, 255);
+			glVertex2f(10.0*cos(i*PI/180), 10.0*sin(i*PI/180));
+		}
+	glEnd();
+	glFlush();
+	glLineWidth(1.0); 
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_LINES);
+		glVertex2f(0, 0);
+		glVertex2f(lineA.x, lineA.y);
+	glEnd();
+	glBegin(GL_LINES);
+		glVertex2f(0, 0);
+		glVertex2f(lineB.x, lineB.y);
+	glEnd();
+	glBegin(GL_LINES);
+		glVertex2f(0, 0);
+		glVertex2f(lineC.x, lineC.y);
+	glEnd();
+	glEnable(GL_POINT_SMOOTH);
+	glPointSize(4.0);
+	glColor3f(0,255,0);
+	glBegin(GL_POINTS);
+		glVertex2f(last.x,last.y);
+	glEnd();
+	glBegin(GL_POINTS);
+		glVertex2f(last1.x,last1.y);
+	glEnd();
+	glBegin(GL_POINTS);
+		glVertex2f(last2.x,last2.y);
+	glEnd();
+	glDisable(GL_POINT_SMOOTH);
+	//flush the buffer so the circle displays
+	//immediately
+	glFlush();
+}
+
+
+//
+// Function Name:  init()
+//
+// This function initializes several of
+// OpenGL's state variables.  Namely it
+// sets the background color, the fill
+// color, and sets up the "real" world
+// coordinate system.
+
+void init()
+{
+	//set the background color to black
+	glClearColor (0.0, 0.0, 0.0, 0.0);
+
+	//set the draw/fill color to white
+	glColor3f(1.0, 0.0, 0.0);
+
+	//set the "real" world coordinates
+	//to a window from -2.5 to 2.5 in x and
+	//-2.5 to 2.5 in y
+	glMatrixMode (GL_PROJECTION);
+	glLoadIdentity ();
+	gluOrtho2D(-10.5,10.5,-10.5,10.5);
+}
 
 void ProperAngle(float &RA1, float &RA2, float &RA3){	// to get ideal angles for the diagram
 	cout<<"proper angles"<<endl;
@@ -24,7 +109,7 @@ void ProperAngle(float &RA1, float &RA2, float &RA3){	// to get ideal angles for
 	cout<<"proper angles finish"<<endl;
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	cout<<"start"<<endl;
 	point origin;
@@ -37,33 +122,33 @@ int main()
 	}
 	int length = sizeof(Array_of_Angles)/sizeof(float);
 	srand(time(NULL));
-	float random_angle1 = Array_of_Angles[rand()%length];
+	float random_angle1 = Array_of_Angles[rand()%length];	// get random angles
 	float random_angle2 = Array_of_Angles[rand()%length];
 	float random_angle3 = Array_of_Angles[rand()%length];
 	cout<<"angles finish"<<endl;
-	if((random_angle1 + random_angle2 + random_angle3) > 360)
+	if((random_angle1 + random_angle2 + random_angle3) > 360)	// make sure angles are legitimate
 		ProperAngle(random_angle1, random_angle2, random_angle3);
 	cout<<"constructors start"<<endl;
-	line A(origin, random_angle1);
+	line A(origin, random_angle1);					// define the lines
 	line B(origin, (random_angle1 + random_angle2));
 	line C(origin, (random_angle1 + random_angle2 + random_angle3));
-	circle O(10.0);
+	circle O(10.0);							// define the circle
 	cout<<"constructors finish"<<endl;
-	polar_point P, Q;
+	polar_point P, Q;						// define the initial points
 	P.r = 10.0;
-	P.theta = random_angle1 + 0.1;
+	P.theta = random_angle1;
 	P.angle_correction();
 	Q.r = 10.0;
-	Q.theta = random_angle1 + random_angle2 - 0.1;
+	Q.theta = random_angle1 + random_angle2 ;
 	Q.angle_correction();
 	bool found = false;
-	cout<<"mirror P start"<<endl;
-	while(found == false)
+	while(found == false)						// start seach loop
 	{
+		cout<<"mirror P start"<<endl;
 		mirror_P:
 		polar_point P1 = A.MirrorPoint(P);
 		P1.angle_correction();
-		bool P1proper;
+		bool P1proper;				// make sure P1 is legitimate
 		if(P1.theta < random_angle1)
 			P1proper = true;
 		else if(P1.theta > (random_angle1 + random_angle2 + random_angle3))
@@ -72,14 +157,14 @@ int main()
 			P1proper = false;
 		polar_point P2 = B.MirrorPoint(P);
 		P2.angle_correction();
-		bool P2proper;
+		bool P2proper;				// make sure P2 is llegitimate
 		if(P2.theta > (random_angle1 + random_angle2) && P2.theta < (random_angle1 + random_angle2 + random_angle3))
 			P2proper = true;
 		else
 			P2proper = false;
 		polar_point P12 = C.MirrorPoint(P1);
 		P12.angle_correction();
-		bool P12proper;
+		bool P12proper;				// make sure P12 is legitimate
 		if(P12.theta >  (random_angle1 + random_angle2) && P2.theta < (random_angle1 + random_angle2 + random_angle3))
 			P12proper = true;
 		else
@@ -87,22 +172,28 @@ int main()
 		if (P12proper == false || P2proper == false)
 		{
 			P.theta += random_angle2/100;
+			cout<<random_angle1 + random_angle2<<endl;
+			cout<<random_angle1 + random_angle2 + random_angle3<<endl;
+			cout<<"goto p1 "<<P12.theta<<" "<<P2.theta<<endl;
 			goto mirror_P;
 		}
-		if (P1proper == false)
+		/*else if (P1proper == false)
 		{
+			cout<<random_angle1<<endl;
+			cout<<random_angle1 + random_angle2 + random_angle3<<endl;
 			P.theta -= random_angle2/100;
+			cout<<"goto p2 "<<P1.theta<<" "<<endl;
 			goto mirror_P;
-		}
+		}*/
 		cout<<"P -> ("<<P.r<<", "<<P.theta<<") P1 -> ("<<P1.r<<", "<<P1.theta<<") P2 -> ("<<P2.r<<", "<<P2.theta<<") P12 -> ("<<P12.r<<", "<<P12.theta<<")"<<endl;
 		cout<<"P finish"<<endl;
-		if (P2.theta != P12.theta)
+		if (P2.theta != P12.theta)			// if P is not the vertex
 		{
 			cout<<"Q start"<<endl;
 			mirror_Q:
 			polar_point Q1 = A.MirrorPoint(Q);
 			Q1.angle_correction();
-			bool Q1proper;
+			bool Q1proper;				// make sure Q1 is legitimate
 			if(Q1.theta < random_angle1)
 				Q1proper = true;
 			else if(P1.theta > (random_angle1 + random_angle2 + random_angle3))
@@ -111,48 +202,109 @@ int main()
 				Q1proper = false;
 			polar_point Q2 = B.MirrorPoint(Q);
 			Q2.angle_correction();
-			bool Q2proper;
+			bool Q2proper;				// make sure Q2 is legitimate
 			if(Q2.theta > (random_angle1 + random_angle2) && Q2.theta < (random_angle1 + random_angle2 + random_angle3))
 				Q2proper = true;
 			else
 				Q2proper = false;
 			polar_point Q12 = C.MirrorPoint(Q1);
 			Q12.angle_correction();
-			bool Q12proper;
+			bool Q12proper;				// make sure Q12 is legitimate
 			if(Q12.theta >  (random_angle1 + random_angle2) && Q2.theta < (random_angle1 + random_angle2 + random_angle3))
 				Q12proper = true;
 			else
 				Q12proper = false;
 			if (Q2proper == false)
 			{
-				Q.theta -= random_angle2/100;
+				cout<<random_angle1 + random_angle2<<endl;
+				cout<<random_angle1 + random_angle2 + random_angle3<<endl;
+				Q.theta -= random_angle2/10000;
+				cout<<"goto q1 "<<Q2.theta<<" "<<endl;
 				goto mirror_Q;
 			}
-			if (Q12proper == false || Q1proper == false)
+			/*else if (Q12proper == false || Q1proper == false)
 			{
-				Q.theta += random_angle2/100;
+				cout<<random_angle1 + random_angle2<<endl;
+				cout<<random_angle1 + random_angle2 + random_angle3<<endl;
+				cout<<random_angle1<<endl;
+				Q.theta += random_angle2/10000;
+				cout<<"goto q2 "<<Q12.theta<<" "<<Q1.theta<<endl;
 				goto mirror_Q;
-			}
-			
-			cout<<"Q -> ("<<Q.r<<", "<<Q.theta<<") Q1 -> ("<<Q1.r<<", "<<Q1.theta<<") Q2 -> ("<<Q2.r<<", "<<Q2.theta<<") Q12 -> ("<<Q12.r<<", "<<Q12.theta<<")"<<endl;
+			}*/
+				
+			cout<<"Q -> ("<<Q.r<<", "<<Q.theta<<") Q1 -> ("<<Q1.r<<", "<<Q1.theta<<") Q2 -> ("<<Q2.r<<",  "<<Q2.theta<<") Q12 -> ("<<Q12.r<<", "<<Q12.theta<<")"<<endl;
 			cout<<"Q finish"<<endl;
-			if(Q2.theta != Q12.theta)
+			if(Q2.theta != Q12.theta) 		// if Q is not the vertex
 			{
 				polar_point pq;
 				pq.theta = (P.theta + Q.theta)/2;
 				pq.r = P.r;
 				pq.angle_correction();
-				//if(condition)
-				//P/Q.theta = pq.theta;
-				//else
-				//Q/P.theta = pq.theta;
-				//P/Q.angle_correction();
+				polar_point pq1 = A.MirrorPoint(pq);
+				pq1.angle_correction();
+				polar_point pq2 = B.MirrorPoint(pq);
+				pq2.angle_correction();
+				polar_point pq12 = C.MirrorPoint(pq1);
+				pq12.angle_correction();
+				if(pq2.theta >= pq12.theta){
+					P.theta = pq.theta;
+					P.angle_correction();
+				}
+				else{
+					Q.theta = pq.theta;
+					Q.angle_correction();
+				}
 			}
 			else
-				found = true;
+				if(Q.theta != Q2.theta){
+					found = true;
+					last = Q.ConvertToCoordinate();
+					last1 = Q1.ConvertToCoordinate();
+					last2 = Q2.ConvertToCoordinate();
+				}
 		}
 		else
-			found = true;
+			if(P.theta != P1.theta){
+				found = true;
+				last = P.ConvertToCoordinate();
+				last1 = P1.ConvertToCoordinate();
+				last2 = P2.ConvertToCoordinate();
+			}
 	}
 	cout<<"mirror finish"<<endl;
+	polar_point temp;
+	temp.theta = A.angle();
+	temp.r = 11;
+	lineA = temp.ConvertToCoordinate();
+	temp.theta = B.angle();
+	lineB = temp.ConvertToCoordinate();
+	temp.theta = C.angle();
+	lineC = temp.ConvertToCoordinate();
+		//set up a session with the window system
+	glutInit(&argc, argv);
+
+	//use a single frame buffer with red, green,
+	//and blue color
+	glutInitDisplayMode (GLUT_SINGLE | GLUT_RGBA); 
+
+	//set the window size to 500 by 500
+	glutInitWindowSize(500,500);
+
+	//the upper left corner will appear
+	//at (0,0) on the screen
+	glutInitWindowPosition(0,0);
+
+	//When the window appears it has "simple"
+	//on the title bar
+	glutCreateWindow("circle");
+
+	//register the display callback to be the
+	//function mydisplay
+	glutDisplayFunc(mydisplay);  
+
+	//initialize OpenGL
+	init();
+
+	//start the infinite event loop
+	glutMainLoop();
 }
