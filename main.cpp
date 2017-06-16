@@ -6,15 +6,17 @@
 #include<algorithm>
 #include<iostream>
 #include<time.h>
-#include <cstdlib>
-#include <GL/glut.h>
+#include<cstdlib>
+#include<GL/glut.h>
+#include<fstream>
+#include<iomanip>
 using namespace std;
 
 point last, last1, last2, lineA, lineB, lineC;
 
 void mydisplay()
 {
-	const float PI=3.14159;
+	const double PI=3.14159;
 
 	//fill the frame buffer with the background color
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -28,7 +30,7 @@ void mydisplay()
 	//glBegin(GL_TRIANGLE_FAN);
 		//All triangles fan out starting with this point
 		glVertex2f (0.0,0.0);
-		for (float i = 0; i <=360; i+= 0.0001)
+		for (double i = 0; i <=360; i+= 0.0001)
 		{				
 			glColor3f(255, 255, 255);
 			glVertex2f(10.0*cos(i*PI/180), 10.0*sin(i*PI/180));
@@ -64,6 +66,7 @@ void mydisplay()
 	glDisable(GL_POINT_SMOOTH);
 	//flush the buffer so the circle displays
 	//immediately
+	glColor3f(255,255,255);
 	glFlush();
 }
 
@@ -93,11 +96,11 @@ void init()
 	gluOrtho2D(-10.5,10.5,-10.5,10.5);
 }
 
-void ProperAngle(float &RA1, float &RA2, float &RA3){	// to get ideal angles for the diagram
+void ProperAngle(double &RA1, double &RA2, double &RA3){	// to get ideal angles for the diagram
 	cout<<"proper angles"<<endl;
 	while ((RA1 + RA2 + RA3) > 360){
-		float temp = max(RA1, max(RA2, RA3));
-		float temp1 = temp*0.75;
+		double temp = max(RA1, max(RA2, RA3));
+		double temp1 = temp*0.75;
 		if(temp == RA1)
 			RA1 = temp1;
 		else if(temp == RA2)
@@ -116,15 +119,15 @@ int main(int argc, char** argv)
 	origin.x = 0;
 	origin.y = 0;
 	cout<<"angles start"<<endl;
-	float Array_of_Angles[360];
+	double Array_of_Angles[360];
 	for(int i=0;i<360;i++){
 		Array_of_Angles[i]=i;
 	}
-	int length = sizeof(Array_of_Angles)/sizeof(float);
+	int length = sizeof(Array_of_Angles)/sizeof(double);
 	srand(time(NULL));
-	float random_angle1 = Array_of_Angles[rand()%length];	// get random angles
-	float random_angle2 = Array_of_Angles[rand()%length];
-	float random_angle3 = Array_of_Angles[rand()%length];
+	double random_angle1 = Array_of_Angles[rand()%length];	// get random angles
+	double random_angle2 = Array_of_Angles[rand()%length];
+	double random_angle3 = Array_of_Angles[rand()%length];
 	cout<<"angles finish"<<endl;
 	if((random_angle1 + random_angle2 + random_angle3) > 360)	// make sure angles are legitimate
 		ProperAngle(random_angle1, random_angle2, random_angle3);
@@ -141,6 +144,8 @@ int main(int argc, char** argv)
 	Q.r = 10.0;
 	Q.theta = random_angle1 + random_angle2 ;
 	Q.angle_correction();
+	ofstream outfile;
+	outfile.open("file.txt",ios::out | ios::trunc);
 	bool found = false;
 	while(found == false)						// start seach loop
 	{
@@ -185,7 +190,14 @@ int main(int argc, char** argv)
 			cout<<"goto p2 "<<P1.theta<<" "<<endl;
 			goto mirror_P;
 		}*/
-		cout<<"P -> ("<<P.r<<", "<<P.theta<<") P1 -> ("<<P1.r<<", "<<P1.theta<<") P2 -> ("<<P2.r<<", "<<P2.theta<<") P12 -> ("<<P12.r<<", "<<P12.theta<<")"<<endl;
+		point temp,temp1,temp2,temp12;
+		temp = P.ConvertToCoordinate();
+		temp1 = P1.ConvertToCoordinate();
+		temp2 = P2.ConvertToCoordinate();
+		temp12 = P12.ConvertToCoordinate();
+		outfile.precision(6);
+		outfile<<fixed;
+		outfile<<setprecision(6)<<"P -> ("<<temp.x<<", "<<temp.y<<") P1 -> ("<<temp1.x<<", "<<temp1.y<<") P2 -> ("<<temp2.x<<", "<<temp2.y<<") P12 -> ("<<temp12.x<<", "<<temp12.y<<")"<<endl;
 		cout<<"P finish"<<endl;
 		if (P2.theta != P12.theta)			// if P is not the vertex
 		{
@@ -231,8 +243,14 @@ int main(int argc, char** argv)
 				cout<<"goto q2 "<<Q12.theta<<" "<<Q1.theta<<endl;
 				goto mirror_Q;
 			}*/
-				
-			cout<<"Q -> ("<<Q.r<<", "<<Q.theta<<") Q1 -> ("<<Q1.r<<", "<<Q1.theta<<") Q2 -> ("<<Q2.r<<",  "<<Q2.theta<<") Q12 -> ("<<Q12.r<<", "<<Q12.theta<<")"<<endl;
+			outfile.precision(6);
+			outfile<<fixed;	
+			point temp,temp1,temp2,temp12;
+			temp = Q.ConvertToCoordinate();
+			temp1 = Q1.ConvertToCoordinate();
+			temp2 = Q2.ConvertToCoordinate();
+			temp12 = Q12.ConvertToCoordinate();
+			outfile<<setprecision(6)<<"Q -> ("<<temp.x<<", "<<temp.y<<") Q1 -> ("<<temp1.x<<", "<<temp1.y<<") Q2 -> ("<<temp2.x<<", "<<temp2.y<<") Q12 -> ("<<temp12.x<<", "<<temp12.y<<")"<<endl<<endl;
 			cout<<"Q finish"<<endl;
 			if(Q2.theta != Q12.theta) 		// if Q is not the vertex
 			{
@@ -261,6 +279,7 @@ int main(int argc, char** argv)
 					last = Q.ConvertToCoordinate();
 					last1 = Q1.ConvertToCoordinate();
 					last2 = Q2.ConvertToCoordinate();
+					outfile.close();
 				}
 		}
 		else
@@ -269,6 +288,7 @@ int main(int argc, char** argv)
 				last = P.ConvertToCoordinate();
 				last1 = P1.ConvertToCoordinate();
 				last2 = P2.ConvertToCoordinate();
+				outfile.close();
 			}
 	}
 	cout<<"mirror finish"<<endl;
