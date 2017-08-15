@@ -12,6 +12,6 @@ struct point{
 struct polar_point{  						//  polar coordinates
 	float r, theta; 
 	point ConvertToCoordinate();
-	polar_point angle_correction();
+	void angle_correction();
 };
 #endif
