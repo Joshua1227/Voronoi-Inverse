@@ -10,7 +10,6 @@
 #include<GL/glut.h>
 #include<fstream>
 #include<iomanip>
-//#include<limits>
 
 //typedef std::numeric_limits< float > dbl;
 
@@ -123,21 +122,6 @@ void init()
 	gluOrtho2D(-10.5,10.5,-10.5,10.5);
 }
 
-/*void ProperAngle(float &RA1, float &RA2, float &RA3){	// to get ideal angles for the diagram
-	//cout<<"proper angles"<<endl;
-	while ((RA1 + RA2 + RA3) > 360){
-		float temp = max(RA1, max(RA2, RA3));
-		float temp1 = temp*0.75;
-		if(temp == RA1)
-			RA1 = temp1;
-		else if(temp == RA2)
-			RA2 = temp1;
-		else if(temp == RA3)
-			RA3 = temp1;
-		//cout<<RA1 + RA2 + RA3<<endl;
-	}
-	//cout<<"proper angles finish"<<endl;
-}*/
 
 int main(int argc, char** argv)
 {
@@ -152,14 +136,12 @@ int main(int argc, char** argv)
 	}
 	int length = sizeof(Array_of_Angles)/sizeof(float);
 	srand(time(NULL));
-	float random_angle1 = 202.918;// = Array_of_Angles[rand()%length];	// get random angles
-	float random_angle2 = 92.2453;// = Array_of_Angles[rand()%length];
-	float random_angle3 = 297.624;// = Array_of_Angles[rand()%length];
-	//cout<<"enter angles"<<endl;
-	//cin>>random_angle1>>random_angle2>>random_angle3;
+	float random_angle1;// = Array_of_Angles[rand()%length];	// get random angles
+	float random_angle2;// = Array_of_Angles[rand()%length];
+	float random_angle3;// = Array_of_Angles[rand()%length];
+	cout<<"enter angles"<<endl;
+	cin>>random_angle1>>random_angle2>>random_angle3;
 	cout<<"angles finish"<<endl<<"The angles are:"<<endl;
-	//if((random_angle1 + random_angle2 + random_angle3) > 360)	// make sure angles are legitimate
-	//	ProperAngle(random_angle1, random_angle2, random_angle3);
 	cout<<random_angle1<<endl<<random_angle2<<endl<<random_angle3<<endl;
 	cout<<"constructors start"<<endl;
 	line A(origin, random_angle1);					// define the lines
@@ -179,120 +161,28 @@ int main(int argc, char** argv)
 	bool found = false;
 	while(found == false)						// start seach loop
 	{
-		//cout<<"mirror P start"<<endl;
-		//mirror_P:
 		polar_point P1 = A.MirrorPoint(P);
-		//P1.angle_correction();
-		//bool P1proper;				// make sure P1 is legitimate
-		//if(P1.theta < random_angle1)
-		//	P1proper = true;
-		//else if(P1.theta > (random_angle1 + random_angle2 + random_angle3))
-		//	P1proper = true;
-		//else
-		//	P1proper = false;
 		polar_point P2 = B.MirrorPoint(P);
-		//P2.angle_correction();
-		//bool P2proper;				// make sure P2 is legitimate
-		//if(P2.theta > (random_angle1 + random_angle2) && P2.theta < (random_angle1 + random_angle2 + random_angle3))
-		//	P2proper = true;
-		//else
-		//	P2proper = false;
 		polar_point P12 = C.MirrorPoint(P1);
-		//P12.angle_correction();
-		//bool P12proper;				// make sure P12 is legitimate
-		//if(P12.theta >  (random_angle1 + random_angle2) && P2.theta < (random_angle1 + random_angle2 + random_angle3))
-		//	P12proper = true;
-		//else
-		//	P12proper = false;
-		//if (P12proper == false || P2proper == false)
-		//{
-		//	P.theta += random_angle2/100;
-			//cout<<random_angle1 + random_angle2<<endl;
-			//cout<<random_angle1 + random_angle2 + random_angle3<<endl;
-			//cout<<"goto p1 "<<P12.theta<<" "<<P2.theta<<endl;
-		//	goto mirror_P;
-		//}
-		/*else if (P1proper == false)
-		{
-			cout<<random_angle1<<endl;
-			cout<<random_angle1 + random_angle2 + random_angle3<<endl;
-			P.theta -= random_angle2/100;
-			cout<<"goto p2 "<<P1.theta<<" "<<endl;
-			goto mirror_P;
-		}*/
-		//P.angle_correction();
-		//P1.angle_correction();
-		//P2.angle_correction();
-		//P12.angle_correction();
 		point temp,temp1,temp2,temp12;
 		temp = P.ConvertToCoordinate();
 		temp1 = P1.ConvertToCoordinate();
 		temp2 = P2.ConvertToCoordinate();
 		temp12 = P12.ConvertToCoordinate();
-		//outfile.precision(20);
-		//outfile<<fixed;
-		//outfile<<setprecision(20)<<"P -> ("<<temp.x<<", "<<temp.y<<") P1 -> ("<<temp1.x<<", "<<temp1.y<<") P2 -> ("<<temp2.x<<", "<<temp2.y<<") P12 -> ("<<temp12.x<<", "<<temp12.y<<")"<<endl;
 		outfile<<"P -> ("<<P.r<<", "<<P.theta<<") P1 -> ("<<P1.r<<", "<<P1.theta<<") P2 -> ("<<P2.r<<", "<<P2.theta<<") P12 -> ("<<P12.r<<", "<<P12.theta<<")"<<endl;
-		//cout<<"P finish"<<endl;
 		//KEY AREA//
 		if (P2.theta !=   P12.theta)			// if P is not the vertex
 		{
-			//cout<<"Q start"<<endl;
 			mirror_Q:
 			polar_point Q1 = A.MirrorPoint(Q);
-			//Q1.angle_correction();
-			//bool Q1proper;				// make sure Q1 is legitimate
-			//if(Q1.theta < random_angle1)
-			//	Q1proper = true;
-			//else if(P1.theta > (random_angle1 + random_angle2 + random_angle3))
-			//	Q1proper = true;
-			//else
-			//	Q1proper = false;
 			polar_point Q2 = B.MirrorPoint(Q);
-			//Q2.angle_correction();
-			//bool Q2proper;				// make sure Q2 is legitimate
-			//if(Q2.theta > (random_angle1 + random_angle2) && Q2.theta < (random_angle1 + random_angle2 + random_angle3))
-			//	Q2proper = true;
-			//else
-			//	Q2proper = false;
-			polar_point Q12 = C.MirrorPoint(Q1);
-			//Q12.angle_correction();
-			//bool Q12proper;				// make sure Q12 is legitimate
-			//if(Q12.theta >  (random_angle1 + random_angle2) && Q2.theta < (random_angle1 + random_angle2 + random_angle3))
-			//	Q12proper = true;
-			//else
-			//	Q12proper = false;
-			//if (Q2proper == false)
-			//{
-				//cout<<random_angle1 + random_angle2<<endl;
-				//cout<<random_angle1 + random_angle2 + random_angle3<<endl;
-			//	Q.theta -= random_angle2/10000;
-				//cout<<"goto q1 "<<Q2.theta<<" "<<endl;
-			//	goto mirror_Q;
-			//}
-			/*else if (Q12proper == false || Q1proper == false)
-			{
-				cout<<random_angle1 + random_angle2<<endl;
-				cout<<random_angle1 + random_angle2 + random_angle3<<endl;
-				cout<<random_angle1<<endl;
-				Q.theta += random_angle2/10000;
-				cout<<"goto q2 "<<Q12.theta<<" "<<Q1.theta<<endl;
-				goto mirror_Q;
-			}*/
-			//Q.angle_correction();
-			//Q1.angle_correction();
-			//Q2.angle_correction();
-			//Q12.angle_correction();
-			//outfile.precision(20);
-			//outfile<<fixed;	
+			polar_point Q12 = C.MirrorPoint(Q1);	// initialize Q and its mirror points
 			point temp,temp1,temp2,temp12;
-			temp = Q.ConvertToCoordinate();
+			temp = Q.ConvertToCoordinate();		// store them in a temporary variable
 			temp1 = Q1.ConvertToCoordinate();
 			temp2 = Q2.ConvertToCoordinate();
 			temp12 = Q12.ConvertToCoordinate();
-			//outfile<<setprecision(20)<<"Q -> ("<<temp.x<<", "<<temp.y<<") Q1 -> ("<<temp1.x<<", "<<temp1.y<<") Q2 -> ("<<temp2.x<<", "<<temp2.y<<") Q12 -> ("<<temp12.x<<", "<<temp12.y<<")"<<endl<<endl;
 			outfile<<"Q -> ("<<Q.r<<", "<<Q.theta<<") Q1 -> ("<<Q1.r<<", "<<Q1.theta<<") Q2 -> ("<<Q2.r<<", "<<Q2.theta<<") Q12 -> ("<<Q12.r<<", "<<Q12.theta<<")"<<endl;
-			//cout<<"Q finish"<<endl;
 			//KEY AREA//
 			
 			if(Q2.theta != Q12.theta) 		// if Q is not the vertex
@@ -300,58 +190,47 @@ int main(int argc, char** argv)
 				polar_point pq;
 				pq.theta = (P.theta + Q.theta)/2;
 				pq.r = P.r;
-				//pq.angle_correction();
 				polar_point pq1 = A.MirrorPoint(pq);
-				//pq1.angle_correction();
 				polar_point pq2 = B.MirrorPoint(pq);
-				//pq2.angle_correction();
 				polar_point pq12 = C.MirrorPoint(pq1);
-				//pq12.angle_correction();
 				outfile<<"PQ -> ("<<pq.r<<", "<<pq.theta<<") PQ1 -> ("<<pq1.r<<", "<<pq1.theta<<") PQ2 -> ("<<pq2.r<<", "<<pq2.theta<<") PQ12 -> ("<<pq12.r<<", "<<pq12.theta<<")"<<endl;
-				if(pq.theta == P.theta || pq.theta == Q.theta){
+				if(pq.theta == P.theta || pq.theta == Q.theta){ // if the points P and Q converge last will hold the coordinates of the voronoi points we have so far
 					cout<<"final point reached"<<endl;
 					outfile<<"final point reached"<<endl;
 					last = P.ConvertToCoordinate();
 					last1 = P1.ConvertToCoordinate();
 					last2 = P2.ConvertToCoordinate();
 					break;
-					//exit(0);
 				}
+	// This section runs when the angles are split between the first and the fourth quadrant
 				if(((P12.theta <= 90.0) && (P2.theta >= 270.0)) || ((Q12.theta >= 270.0)  && (Q2.theta <= 90.0)))
 				{
-					if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(Q2.theta) - change_domain(Q12.theta))){
+					if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(Q2.theta) - change_domain(Q12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as Q
 						outfile<<"case 1.1"<<endl;
 						Q.theta = pq.theta;
 					}
-					else if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(P2.theta) - change_domain(P12.theta))){
+					else if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(P2.theta) - change_domain(P12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as P
 						outfile<<"case 2.1"<<endl;
 						P.theta = pq.theta;
 					}
-					/*else {
-						outfile<<"case 3.1"<<endl;
-						P.theta = pq.theta;
-					}*/
 					else{
 						cout<<"somethings wrong"<<endl;
 						exit(0);
 					}
 				}
+	// This section runs for all other cases
 				else
 				{
 				if(signbit(pq2.theta - pq12.theta) == signbit(P2.theta - P12.theta)){
+				// this condition is when the sign of the difference between 2 and 12 for pq is the same as P
 					outfile<<"case 1"<<endl;
 					P.theta = pq.theta;
 				}
 				else if(signbit(pq2.theta - pq12.theta) == signbit(Q2.theta - Q12.theta)){
+				// this condition is when the sign of the difference between 2 and 12 for pq is the same as Q
 					outfile<<"case 2"<<endl;
 					Q.theta = pq.theta;
-					//Q.angle_correction();
 				}
-				/*else if(pq2.theta == pq12.theta){
-					outfile<<"case 3"<<endl;
-					P.theta = pq.theta;
-					//P.angle_correction();
-				}*/
 				else{
 					cout<<"somethings wrong"<<endl;
 					exit(0);
@@ -361,6 +240,7 @@ int main(int argc, char** argv)
 			else
 				{
 					found = true;
+					//last variables hold the finalised voronoi points
 					last = Q.ConvertToCoordinate();
 					last1 = Q1.ConvertToCoordinate();
 					last2 = Q2.ConvertToCoordinate();
@@ -370,16 +250,17 @@ int main(int argc, char** argv)
 		else
 			{
 				found = true;
+				//last variables hold the finalised voronoi points
 				last = P.ConvertToCoordinate();
 				last1 = P1.ConvertToCoordinate();
 				last2 = P2.ConvertToCoordinate();
 				outfile.close();
 			}
 	}
-	//cout<<"mirror finish"<<endl;
 	polar_point temp;
 	temp.theta = A.angle();
 	temp.r = 11;
+	//line A, B, C are the final lines to be drawn which represent the voronoi diagram
 	lineA = temp.ConvertToCoordinate();
 	temp.theta = B.angle();
 	lineB = temp.ConvertToCoordinate();
