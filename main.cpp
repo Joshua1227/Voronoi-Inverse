@@ -18,6 +18,13 @@ using namespace std;
 
 point last, last1, last2, lineA, lineB, lineC;
 
+float change_domain(float a){
+	if(a < 180.0)
+		return (360.0 + a);
+	else 
+		return a;
+}
+
 void mydisplay()
 {
 	const float PI=3.14159;
@@ -116,7 +123,7 @@ void init()
 	gluOrtho2D(-10.5,10.5,-10.5,10.5);
 }
 
-void ProperAngle(float &RA1, float &RA2, float &RA3){	// to get ideal angles for the diagram
+/*void ProperAngle(float &RA1, float &RA2, float &RA3){	// to get ideal angles for the diagram
 	//cout<<"proper angles"<<endl;
 	while ((RA1 + RA2 + RA3) > 360){
 		float temp = max(RA1, max(RA2, RA3));
@@ -130,7 +137,7 @@ void ProperAngle(float &RA1, float &RA2, float &RA3){	// to get ideal angles for
 		//cout<<RA1 + RA2 + RA3<<endl;
 	}
 	//cout<<"proper angles finish"<<endl;
-}
+}*/
 
 int main(int argc, char** argv)
 {
@@ -145,19 +152,19 @@ int main(int argc, char** argv)
 	}
 	int length = sizeof(Array_of_Angles)/sizeof(float);
 	srand(time(NULL));
-	float random_angle1 = Array_of_Angles[rand()%length];	// get random angles
-	float random_angle2 = Array_of_Angles[rand()%length];
-	float random_angle3 = Array_of_Angles[rand()%length];
-	cout<<"enter angles"<<endl;
-	cin>>random_angle1>>random_angle2>>random_angle3;
+	float random_angle1 = 202.918;// = Array_of_Angles[rand()%length];	// get random angles
+	float random_angle2 = 92.2453;// = Array_of_Angles[rand()%length];
+	float random_angle3 = 297.624;// = Array_of_Angles[rand()%length];
+	//cout<<"enter angles"<<endl;
+	//cin>>random_angle1>>random_angle2>>random_angle3;
 	cout<<"angles finish"<<endl<<"The angles are:"<<endl;
-	if((random_angle1 + random_angle2 + random_angle3) > 360)	// make sure angles are legitimate
-		ProperAngle(random_angle1, random_angle2, random_angle3);
-	cout<<random_angle1<<endl<<random_angle1 + random_angle2<<endl<<random_angle1 + random_angle2 + random_angle3<<endl;
+	//if((random_angle1 + random_angle2 + random_angle3) > 360)	// make sure angles are legitimate
+	//	ProperAngle(random_angle1, random_angle2, random_angle3);
+	cout<<random_angle1<<endl<<random_angle2<<endl<<random_angle3<<endl;
 	cout<<"constructors start"<<endl;
 	line A(origin, random_angle1);					// define the lines
-	line B(origin, (random_angle1 + random_angle2));
-	line C(origin, (random_angle1 + random_angle2 + random_angle3));
+	line B(origin, random_angle2);
+	line C(origin, random_angle3);
 	circle O(10.0);							// define the circle
 	cout<<"constructors finish"<<endl;
 	polar_point P, Q;						// define the initial points
@@ -165,7 +172,7 @@ int main(int argc, char** argv)
 	P.theta = random_angle1;
 	P.angle_correction();
 	Q.r = 10.0;
-	Q.theta = random_angle1 + random_angle2 ;
+	Q.theta = random_angle2 ;
 	Q.angle_correction();
 	ofstream outfile;
 	outfile.open("file.txt",ios::out | ios::trunc);
@@ -222,13 +229,13 @@ int main(int argc, char** argv)
 		temp1 = P1.ConvertToCoordinate();
 		temp2 = P2.ConvertToCoordinate();
 		temp12 = P12.ConvertToCoordinate();
-		outfile.precision(20);
-		outfile<<fixed;
+		//outfile.precision(20);
+		//outfile<<fixed;
 		//outfile<<setprecision(20)<<"P -> ("<<temp.x<<", "<<temp.y<<") P1 -> ("<<temp1.x<<", "<<temp1.y<<") P2 -> ("<<temp2.x<<", "<<temp2.y<<") P12 -> ("<<temp12.x<<", "<<temp12.y<<")"<<endl;
-		outfile<<setprecision(20)<<"P -> ("<<P.r<<", "<<P.theta<<") P1 -> ("<<P1.r<<", "<<P1.theta<<") P2 -> ("<<P2.r<<", "<<P2.theta<<") P12 -> ("<<P12.r<<", "<<P12.theta<<")"<<endl;
+		outfile<<"P -> ("<<P.r<<", "<<P.theta<<") P1 -> ("<<P1.r<<", "<<P1.theta<<") P2 -> ("<<P2.r<<", "<<P2.theta<<") P12 -> ("<<P12.r<<", "<<P12.theta<<")"<<endl;
 		//cout<<"P finish"<<endl;
 		//KEY AREA//
-		if (P2.theta != P12.theta)			// if P is not the vertex
+		if (P2.theta !=   P12.theta)			// if P is not the vertex
 		{
 			//cout<<"Q start"<<endl;
 			mirror_Q:
@@ -276,15 +283,15 @@ int main(int argc, char** argv)
 			//Q1.angle_correction();
 			//Q2.angle_correction();
 			//Q12.angle_correction();
-			outfile.precision(20);
-			outfile<<fixed;	
+			//outfile.precision(20);
+			//outfile<<fixed;	
 			point temp,temp1,temp2,temp12;
 			temp = Q.ConvertToCoordinate();
 			temp1 = Q1.ConvertToCoordinate();
 			temp2 = Q2.ConvertToCoordinate();
 			temp12 = Q12.ConvertToCoordinate();
 			//outfile<<setprecision(20)<<"Q -> ("<<temp.x<<", "<<temp.y<<") Q1 -> ("<<temp1.x<<", "<<temp1.y<<") Q2 -> ("<<temp2.x<<", "<<temp2.y<<") Q12 -> ("<<temp12.x<<", "<<temp12.y<<")"<<endl<<endl;
-			outfile<<setprecision(20)<<"Q -> ("<<Q.r<<", "<<Q.theta<<") Q1 -> ("<<Q1.r<<", "<<Q1.theta<<") Q2 -> ("<<Q2.r<<", "<<Q2.theta<<") Q12 -> ("<<Q12.r<<", "<<Q12.theta<<")"<<endl;
+			outfile<<"Q -> ("<<Q.r<<", "<<Q.theta<<") Q1 -> ("<<Q1.r<<", "<<Q1.theta<<") Q2 -> ("<<Q2.r<<", "<<Q2.theta<<") Q12 -> ("<<Q12.r<<", "<<Q12.theta<<")"<<endl;
 			//cout<<"Q finish"<<endl;
 			//KEY AREA//
 			
@@ -300,34 +307,55 @@ int main(int argc, char** argv)
 				//pq2.angle_correction();
 				polar_point pq12 = C.MirrorPoint(pq1);
 				//pq12.angle_correction();
-				outfile<<setprecision(20)<<"PQ -> ("<<pq.r<<", "<<pq.theta<<") PQ1 -> ("<<pq1.r<<", "<<pq1.theta<<") PQ2 -> ("<<pq2.r<<", "<<pq2.theta<<") PQ12 -> ("<<pq12.r<<", "<<pq12.theta<<")"<<endl;
+				outfile<<"PQ -> ("<<pq.r<<", "<<pq.theta<<") PQ1 -> ("<<pq1.r<<", "<<pq1.theta<<") PQ2 -> ("<<pq2.r<<", "<<pq2.theta<<") PQ12 -> ("<<pq12.r<<", "<<pq12.theta<<")"<<endl;
 				if(pq.theta == P.theta || pq.theta == Q.theta){
 					cout<<"final point reached"<<endl;
 					outfile<<"final point reached"<<endl;
-					exit(0);
+					last = P.ConvertToCoordinate();
+					last1 = P1.ConvertToCoordinate();
+					last2 = P2.ConvertToCoordinate();
+					break;
+					//exit(0);
 				}
-				if(pq2.theta > pq12.theta){
+				if(((P12.theta <= 90.0) && (P2.theta >= 270.0)) || ((Q12.theta >= 270.0)  && (Q2.theta <= 90.0)))
+				{
+					if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(Q2.theta) - change_domain(Q12.theta))){
+						outfile<<"case 1.1"<<endl;
+						Q.theta = pq.theta;
+					}
+					else if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(P2.theta) - change_domain(P12.theta))){
+						outfile<<"case 2.1"<<endl;
+						P.theta = pq.theta;
+					}
+					/*else {
+						outfile<<"case 3.1"<<endl;
+						P.theta = pq.theta;
+					}*/
+					else{
+						cout<<"somethings wrong"<<endl;
+						exit(0);
+					}
+				}
+				else
+				{
+				if(signbit(pq2.theta - pq12.theta) == signbit(P2.theta - P12.theta)){
 					outfile<<"case 1"<<endl;
-					//cout<<"1) "<<P.theta<<endl;
-					//cout<<"1.1) "<<pq.theta<<endl;
 					P.theta = pq.theta;
-					//cout<<"2) "<<P.theta<<endl;
-					//P.angle_correction();
-				//	cout<<"3) "<<P.theta<<endl;
 				}
-				else if(pq2.theta < pq12.theta){
+				else if(signbit(pq2.theta - pq12.theta) == signbit(Q2.theta - Q12.theta)){
 					outfile<<"case 2"<<endl;
 					Q.theta = pq.theta;
 					//Q.angle_correction();
 				}
-				else if(pq2.theta == pq12.theta){
+				/*else if(pq2.theta == pq12.theta){
 					outfile<<"case 3"<<endl;
 					P.theta = pq.theta;
 					//P.angle_correction();
-				}
+				}*/
 				else{
 					cout<<"somethings wrong"<<endl;
 					exit(0);
+				}
 				}
 			}
 			else
