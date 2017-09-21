@@ -203,7 +203,7 @@ int main(int argc, char** argv)
 					break;
 				}
 	// This section runs when the angles are split between the first and the fourth quadrant
-				if(((P12.theta <= 90.0) && (P2.theta >= 270.0)) || ((Q12.theta >= 270.0)  && (Q2.theta <= 90.0)))
+				if(((P12.theta <= 90.0) && (P2.theta >= 180.0)) || ((Q12.theta >= 180.0)  && (Q2.theta <= 90.0)))
 				{
 					if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(Q2.theta) - change_domain(Q12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as Q
 						outfile<<"case 1.1"<<endl;
