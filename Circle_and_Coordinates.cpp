@@ -162,3 +162,5 @@ polar_point circle::ClosestPoint(polar_point p){		// this function assumes cente
 	p.r = radius;
 	return p;
 }
+
+
