@@ -17,8 +17,14 @@ using namespace std;
 
 point last, last1, last2, lineA, lineB, lineC;
 
-float change_domain(float a){
+float change_domain_180(float a){
 	if(a < 180.0)
+		return (360.0 + a);
+	else 
+		return a;
+}
+float change_domain_90(float a){
+	if(a < 90.0)
 		return (360.0 + a);
 	else 
 		return a;
@@ -202,14 +208,17 @@ int main(int argc, char** argv)
 					last2 = P2.ConvertToCoordinate();
 					break;
 				}
-	// This section runs when the angles are split between the first and the fourth quadrant
-				if(((P12.theta <= 90.0) && (P2.theta >= 180.0)) || ((Q12.theta >= 180.0)  && (Q2.theta <= 90.0)))
+	// this section runs when 12 is not in the correct quadrant
+				if(((P12.theta < B.angle()) || (P12.theta > C.angle()) || ((Q12.theta < B.angle()) || (Q12.theta > C.angle()))))
 				{
-					if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(Q2.theta) - change_domain(Q12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as Q
+	// This section runs when the angles are split between the first and the fourth quadrant
+				if(((P12.theta <= 90.0) && (P2.theta >= 180.0)) || ((Q12.theta >= 180.0)  && (Q2.theta <= 90.0)) || ((Q12.theta < 90) && (Q1.theta > 180)))
+				{
+					if(signbit(change_domain_90(pq2.theta) - change_domain_90(pq12.theta)) == signbit(change_domain_90(Q2.theta) - change_domain_90(Q12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as Q
 						outfile<<"case 1.1"<<endl;
 						Q.theta = pq.theta;
 					}
-					else if(signbit(change_domain(pq2.theta) - change_domain(pq12.theta)) == signbit(change_domain(P2.theta) - change_domain(P12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as P
+					else if(signbit(change_domain_90(pq2.theta) - change_domain_90(pq12.theta)) == signbit(change_domain_90(P2.theta) - change_domain_90(P12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as P
 						outfile<<"case 2.1"<<endl;
 						P.theta = pq.theta;
 					}
@@ -234,6 +243,44 @@ int main(int argc, char** argv)
 				else{
 					cout<<"somethings wrong"<<endl;
 					exit(0);
+				}
+				}
+				}
+				else
+				{
+				// This section runs when the angles are split between the first and the fourth quadrant
+				if(((P12.theta <= 90.0) && (P2.theta >= 180.0)) || ((Q12.theta >= 180.0)  && (Q2.theta <= 90.0)) || ((Q12.theta < 90) && (Q1.theta > 180)))
+				{
+					if(signbit(change_domain_180(pq2.theta) - change_domain_180(pq12.theta)) == signbit(change_domain_180(Q2.theta) - change_domain_180(Q12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as Q
+						outfile<<"case 1.1"<<endl;
+						Q.theta = pq.theta;
+					}
+					else if(signbit(change_domain_180(pq2.theta) - change_domain_180(pq12.theta)) == signbit(change_domain_180(P2.theta) - change_domain_180(P12.theta))){ // this condition is when the sign of the difference between 2 and 12 for pq is the same as P
+						outfile<<"case 2.1"<<endl;
+						P.theta = pq.theta;
+					}
+					else{
+						cout<<"somethings wrong"<<endl;
+						exit(0);
+					}
+				}
+	// This section runs for all other cases
+				else
+				{
+				if(signbit(pq2.theta - pq12.theta) == signbit(P2.theta - P12.theta)){
+				// this condition is when the sign of the difference between 2 and 12 for pq is the same as P
+					outfile<<"case 1"<<endl;
+					P.theta = pq.theta;
+				}
+				else if(signbit(pq2.theta - pq12.theta) == signbit(Q2.theta - Q12.theta)){
+				// this condition is when the sign of the difference between 2 and 12 for pq is the same as Q
+					outfile<<"case 2"<<endl;
+					Q.theta = pq.theta;
+				}
+				else{
+					cout<<"somethings wrong"<<endl;
+					exit(0);
+				}
 				}
 				}
 			}
