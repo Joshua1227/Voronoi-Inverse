@@ -22,3 +22,5 @@ void polar_point::angle_correction(){
 	while (theta < 0)
 		theta = theta + 360;
 }
+
+
