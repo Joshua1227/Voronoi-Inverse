@@ -218,7 +218,12 @@ int main(int argc, char** argv)
 			if(Q2.theta != Q12.theta) 		// if Q is not the vertex
 			{
 				polar_point pq;
-				pq.theta = (P.theta + Q.theta)/2;
+				if((P.theta - Q.theta > 180) || (Q.theta - P.theta > 180))
+					pq.theta = (P.theta + Q.theta)/2 - 180;
+				else
+					pq.theta = (P.theta + Q.theta)/2;
+				if(pq.theta < 0)
+					pq.theta += 360;
 				pq.r = P.r;
 				polar_point pq1 = A.MirrorPoint(pq);
 				polar_point pq2 = B.MirrorPoint(pq);
@@ -243,12 +248,12 @@ int main(int argc, char** argv)
 					last2 = P2.ConvertToCoordinate();
 					break;
 				}
-				cout<<"the orientation wrt y of P is "<<orientation_y(P2.ConvertToCoordinate(),P12.ConvertToCoordinate())<<endl;
+				/*cout<<"the orientation wrt y of P is "<<orientation_y(P2.ConvertToCoordinate(),P12.ConvertToCoordinate())<<endl;
 				cout<<"the orientation wrt y of Q is "<<orientation_y(Q2.ConvertToCoordinate(),Q12.ConvertToCoordinate())<<endl;
 				cout<<"the orientation wrt y of PQ is "<<orientation_y(pq2.ConvertToCoordinate(),pq12.ConvertToCoordinate())<<endl;
 				cout<<"the orientation wrt x of P is "<<orientation_x(P2.ConvertToCoordinate(),P12.ConvertToCoordinate())<<endl;
 				cout<<"the orientation wrt x of Q is "<<orientation_x(Q2.ConvertToCoordinate(),Q12.ConvertToCoordinate())<<endl;
-				cout<<"the orientation wrt x of PQ is "<<orientation_x(pq2.ConvertToCoordinate(),pq12.ConvertToCoordinate())<<endl;
+				cout<<"the orientation wrt x of PQ is "<<orientation_x(pq2.ConvertToCoordinate(),pq12.ConvertToCoordinate())<<endl;*/
 				if(orientation_y(Q2.ConvertToCoordinate(),Q12.ConvertToCoordinate()) != orientation_y(P2.ConvertToCoordinate(),P12.ConvertToCoordinate())){
 				if(  orientation_y(pq2.ConvertToCoordinate(),pq12.ConvertToCoordinate()) == orientation_y(P2.ConvertToCoordinate(),P12.ConvertToCoordinate())){
 				// this condition is when the sign of the difference between 2 and 12 for pq is the same as P
